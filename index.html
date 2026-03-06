@@ -1,0 +1,304 @@
+<!-- 
+   MathGPT Assistant - Frontend-only Website
+   Features: ChatGPT-like left-side history, math keyboard, multilingual support
+   Author: AHMUDUL HASSAN
+   Deployment: Ready for Netlify, Vercel, GitHub Pages
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MathGPT Assistant - AI-powered math problem solver with step-by-step solutions">
+    <meta name="author" content="AHMUDUL HASSAN">
+    <title>MathGPT Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-actions">
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18"></path>
+                            <path d="M3 6h18"></path>
+                            <path d="M3 18h18"></path>
+                        </svg>
+                    </button>
+                    <h1 class="logo">
+                        <span class="logo-icon">∑</span>
+                        MathGPT Assistant
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar - Chat History -->
+            <aside class="sidebar" id="sidebar">
+                <!-- Chat History Section (Top) -->
+                <div class="sidebar-header">
+                    <h2>Chat History</h2>
+                    <button class="clear-history-btn" id="clearHistoryBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18"></path>
+                            <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"></path>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-empty">No chat history yet</div>
+                </div>
+                
+                <!-- Action Buttons Section (Bottom) -->
+                <div class="sidebar-actions">
+                    <button class="sidebar-action-btn" id="newChatBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                        New Chat
+                    </button>
+                    <button class="sidebar-action-btn" id="aboutBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 16v-4"></path>
+                            <path d="M12 8h.01"></path>
+                        </svg>
+                        About
+                    </button>
+                    <button class="sidebar-action-btn" id="helpBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                            <path d="M12 17h.01"></path>
+                        </svg>
+                        Help
+                    </button>
+                    <button class="sidebar-action-btn" id="settingsBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1.4 1.93l-.18.06a2 2 0 00-1.16 2.5l.06.18a2 2 0 010 2.11l-.06.18a2 2 0 001.16 2.5l.18.06a2 2 0 011.4 1.93V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011.4-1.93l.18-.06a2 2 0 001.16-2.5l-.06-.18a2 2 0 010-2.11l.06-.18a2 2 0 00-1.16-2.5l-.18-.06a2 2 0 01-1.4-1.93V4a2 2 0 00-2-2z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Settings
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Chat Panel -->
+            <main class="main-panel">
+                <div class="chat-container">
+                    <div class="chat-window" id="chatWindow">
+                        <div class="welcome-message">
+                            <div class="welcome-icon">∑</div>
+                            <h2>Welcome to MathGPT Assistant</h2>
+                            <p>I can help you solve math problems with step-by-step explanations. Ask me anything!</p>
+                            <div class="example-prompts">
+                                <button class="example-prompt" data-prompt="Solve x² + 5x + 6 = 0">
+                                    Solve x² + 5x + 6 = 0
+                                </button>
+                                <button class="example-prompt" data-prompt="What is the derivative of sin(x)?">
+                                    What is the derivative of sin(x)?
+                                </button>
+                                <button class="example-prompt" data-prompt="Calculate ∫2x dx">
+                                    Calculate ∫2x dx
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="input-section">
+                    <div class="input-container">
+                        <div class="input-wrapper">
+                            <textarea 
+                                class="message-input" 
+                                id="messageInput" 
+                                placeholder="Ask a math question or any query..."
+                                rows="1"
+                            ></textarea>
+                            <button class="send-button" id="sendButton" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"></path>
+                                    <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Math Keyboard -->
+                    <div class="keyboard-toggle-wrapper">
+                        <button class="keyboard-toggle" id="keyboardToggle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01"></path>
+                                <path d="M8 12h.01M12 12h.01M16 12h.01"></path>
+                                <path d="M10 16h.01M14 16h.01"></path>
+                            </svg>
+                            <span>Toggle Math Keyboard</span>
+                        </button>
+                    </div>
+
+                    <!-- Math Keyboard (Hidden by default) -->
+                    <div class="math-keyboard" id="mathKeyboard" style="display: none;">
+                        <div class="keyboard-row">
+                            <button class="math-key" data-symbol="+">+</button>
+                            <button class="math-key" data-symbol="−">−</button>
+                            <button class="math-key" data-symbol="×">×</button>
+                            <button class="math-key" data-symbol="÷">÷</button>
+                            <button class="math-key" data-symbol="^">^</button>
+                            <button class="math-key" data-symbol="√">√</button>
+                            <button class="math-key" data-symbol="π">π</button>
+                            <button class="math-key" data-symbol="%">%</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="math-key" data-symbol="½">½</button>
+                            <button class="math-key" data-symbol="⅓">⅓</button>
+                            <button class="math-key" data-symbol="⅔">⅔</button>
+                            <button class="math-key" data-symbol="¼">¼</button>
+                            <button class="math-key" data-symbol="¾">¾</button>
+                            <button class="math-key" data-symbol="∞">∞</button>
+                            <button class="math-key" data-symbol="≈">≈</button>
+                            <button class="math-key" data-symbol="≠">≠</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="math-key" data-symbol="α">α</button>
+                            <button class="math-key" data-symbol="β">β</button>
+                            <button class="math-key" data-symbol="γ">γ</button>
+                            <button class="math-key" data-symbol="δ">δ</button>
+                            <button class="math-key" data-symbol="θ">θ</button>
+                            <button class="math-key" data-symbol="λ">λ</button>
+                            <button class="math-key" data-symbol="μ">μ</button>
+                            <button class="math-key" data-symbol="σ">σ</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="math-key" data-symbol="∫">∫</button>
+                            <button class="math-key" data-symbol="∑">∑</button>
+                            <button class="math-key" data-symbol="∏">∏</button>
+                            <button class="math-key" data-symbol="∂">∂</button>
+                            <button class="math-key" data-symbol="∇">∇</button>
+                            <button class="math-key" data-symbol="∈">∈</button>
+                            <button class="math-key" data-symbol="⊂">⊂</button>
+                            <button class="math-key" data-symbol="∪">∪</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>About MathGPT Assistant</h3>
+                <button class="modal-close" data-modal="aboutModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>MathGPT Assistant is an advanced AI-powered mathematical problem solver that provides step-by-step solutions to a wide range of mathematical problems.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li>Step-by-step math problem solving</li>
+                    <li>Multilingual support (including Bangla)</li>
+                    <li>Chat history persistence</li>
+                    <li>Custom math keyboard</li>
+                    <li>Mobile-responsive design</li>
+                </ul>
+                <h4>Credits:</h4>
+                <p><strong>Provided by AHMUDUL HASSAN</strong></p>
+                <p>Version: 1.0.0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Help & Usage</h3>
+                <button class="modal-close" data-modal="helpModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>How to Use:</h4>
+                <ol>
+                    <li>আপনার গণিত প্রশ্নটি ইনপুট বক্সে লিখুন / Type your math question in the input box</li>
+                    <li>Enter চাপুন বা Send বোতামে ক্লিক করুন / Press Enter or click Send button</li>
+                    <li>ম্যাথ কীবোর্ড টগল করুন সহজে প্রতীক ইনপুটের জন্য / Toggle math keyboard for easy symbol input</li>
+                    <li>বাম দিকের প্যানেলে আপনার চ্যাট ইতিহাস দেখুন / View your chat history in the left panel</li>
+                </ol>
+                <h4>Supported Topics:</h4>
+                <ul>
+                    <li>পাটিগণিত এবং মৌলিক ক্রিয়াকলাপ / Arithmetic and basic operations</li>
+                    <li>বীজগণিত (সমীকরণ, অসমতা) / Algebra (equations, inequalities)</li>
+                    <li>জ্যামিতি এবং ত্রিকোণমিতি / Geometry and trigonometry</li>
+                    <li>ক্যালকুলাস (ডেরিভেটিভ, ইন্টিগ্রাল) / Calculus (derivatives, integrals)</li>
+                    <li>পরিসংখ্যান এবং সম্ভাব্যতা / Statistics and probability</li>
+                    <li>পিথাগোরাস উপপাদ্য / Pythagorean theorem</li>
+                    <li>এবং আরও অনেক কিছু! / And much more!</li>
+                </ul>
+                <h4>Tips:</h4>
+                <ul>
+                    <li>আপনার প্রশ্নগুলি সুনির্দিষ্ট করুন / Be specific with your questions</li>
+                    <li>সমস্ত প্রাসঙ্গিক তথ্য অন্তর্ভুক্ত করুন / Include all relevant information</li>
+                    <li>সঠিক গাণিতিক স্বরলিপি ব্যবহার করুন / Use proper mathematical notation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" data-modal="settingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label for="mathKeyboardToggle">
+                        <input type="checkbox" id="mathKeyboardToggle">
+                        <span>Show Math Keyboard by Default</span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label for="languagePreference">
+                        <span>Language Preference:</span>
+                        <select id="languagePreference">
+                            <option value="auto">Auto-detect</option>
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="zh">Chinese</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <button class="clear-data-btn" id="clearDataBtn">Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <p>Thinking...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
